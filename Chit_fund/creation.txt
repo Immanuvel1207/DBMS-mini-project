@@ -1,0 +1,100 @@
+-- Create the category table
+CREATE TABLE category (
+    ct_id INT PRIMARY KEY,
+    ct_name VARCHAR(10),
+    ct_price INT
+);
+
+-- Create the village table
+CREATE TABLE village (
+    v_name VARCHAR(20) PRIMARY KEY
+);
+
+-- Create the customers table
+CREATE TABLE customers (
+    c_id INT AUTO_INCREMENT PRIMARY KEY,
+    c_name VARCHAR(20) NOT NULL,
+    c_vill VARCHAR(20),
+    c_category INT,
+    phone VARCHAR(10),
+    FOREIGN KEY (c_vill) REFERENCES village(v_name),
+    FOREIGN KEY (c_category) REFERENCES category(ct_id)
+);
+
+-- Create the payments table
+CREATE TABLE payments (
+    p_id INT AUTO_INCREMENT PRIMARY KEY,
+    c_id INT NOT NULL,
+    p_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    p_month VARCHAR(20),
+    FOREIGN KEY (c_id) REFERENCES customers(c_id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Insert data into the village table
+INSERT INTO village (v_name) VALUES ('Ariyanapalli'), ('Boothimuthulu'), ('Veppanapalli');
+
+-- Insert data into the category table
+INSERT INTO category (ct_id, ct_name, ct_price) VALUES
+(1, 'Bronze', 300),
+(2, 'Silver', 500),
+(3, 'Gold', 600),
+(4, 'Platinum', 1200);
+
+-- Insert data into the customers table
+INSERT INTO customers (c_name, c_vill, c_category, phone) VALUES
+('Nandhini', 'Ariyanapalli', 4, '6383437741'),
+('Tharun', 'Boothimuthulu', 3, '9884527891');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER $$
+
+CREATE TRIGGER before_insert_customers 
+BEFORE INSERT ON customers 
+FOR EACH ROW 
+BEGIN 
+    DECLARE village_exists INT;
+    
+    -- Check if the village exists in the village table
+    SELECT COUNT(*) INTO village_exists FROM village WHERE v_name = NEW.c_vill;
+    
+    -- If the village does not exist, insert it into the village table first
+    IF village_exists = 0 THEN
+        INSERT INTO village (v_name) VALUES (NEW.c_vill);
+    END IF;
+END$$
+
+DELIMITER ;

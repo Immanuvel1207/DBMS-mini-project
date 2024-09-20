@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diwali Payments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="submit"], input[type="radio"] {
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .hidden {
+            display: none;
+        }
+        .navigation-buttons {
+            margin-top: 20px;
+        }
+        .navigation-buttons button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .navigation-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        .result-section h2 {
+            margin-bottom: 10px;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .result-table, .result-table th, .result-table td {
+            border: 1px solid #ddd;
+        }
+        .result-table th, .result-table td {
+            padding: 12px;
+            text-align: left;
+        }
+        .result-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Diwali Payments</h1>
+
+    <div>
+        <h2>Add User</h2>
+        <form id="addUserForm">
+            <label for="c_name">Name:</label>
+            <input type="text" id="c_name" name="c_name" required>
+            <br>
+            <label for="c_vill">Village:</label>
+            <input type="text" id="c_vill" name="c_vill" required>
+            <br>
+            <label for="c_category">Category:</label>
+            <input type="text" id="c_category" name="c_category" required>
+            <br>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" required>
+            <br>
+            <input type="submit" value="Add User">
+        </form>
+        <div id="addUserResult" class="hidden"></div>
+    </div>
+
+    <div>
+        <h2>Add Payment</h2>
+        <form id="addPaymentForm">
+            <label for="c_id">User ID:</label>
+            <input type="number" id="c_id" name="c_id" required>
+            <br>
+            <label for="p_month">Payment Month:</label>
+            <input type="text" id="p_month" name="p_month" required>
+            <br>
+            <input type="submit" value="Add Payment">
+        </form>
+        <div id="addPaymentResult" class="hidden"></div>
+    </div>
+
+    <div>
+        <h2>Find User</h2>
+        <form id="findUserForm">
+            <label for="userId">Enter User ID:</label>
+            <input type="number" id="userId" name="userId" required>
+            <input type="submit" value="Find User">
+        </form>
+        <div id="userResult" class="hidden"></div>
+    </div>
+
+    <div>
+        <h2>Find Payments by User ID</h2>
+        <form id="findPaymentsForm">
+            <label for="userIdPayments">Enter User ID:</label>
+            <input type="number" id="userIdPayments" name="userIdPayments" required>
+            <input type="submit" value="Find Payments">
+        </form>
+        <div id="paymentsResult" class="hidden"></div>
+    </div>
+
+    <div>
+        <h2>View Payments by Month</h2>
+        <form id="viewPaymentsByMonthForm">
+            <label for="p_month">Enter Month:</label>
+            <input type="text" id="p_month" name="p_month" required>
+            <input type="submit" value="View Payments">
+        </form>
+        <div id="paymentsByMonthResult" class="hidden"></div>
+    </div>
+
+    <div class="hidden">
+        <h2>Total Amount Paid</h2>
+        <form id="totalAmountPaidForm">
+            <label for="userIdTotal">Enter User ID:</label>
+            <input type="number" id="userIdTotal" name="userIdTotal" required>
+            <input type="submit" value="Get Total Amount Paid">
+        </form>
+        <div id="totalAmountResult" class="hidden"></div>
+    </div>
+
+    <div>
+        <h2>Delete User</h2>
+        <form id="deleteUserForm">
+            <label for="userIdDelete">Enter User ID to Delete:</label>
+            <input type="number" id="userIdDelete" name="userIdDelete" required>
+            <input type="submit" value="Delete User">
+        </form>
+        <div id="deleteResult" class="hidden">
+            <p id="deletedUserDetails"></p>
+            <p id="paymentCount"></p>
+        </div>
+    </div>
+
+    <div class="hidden">
+        <h2>All Users</h2>
+        <button id="loadUsers" type="button" style="background-color: #4caf50; color: white; border: none; cursor: pointer;">Load Users</button>
+        <div id="usersList" class="hidden"></div>
+    </div>
+
+    <div>
+        <h2>Update User</h2>
+        <form id="searchUserForm">
+            <label for="searchUserId">Enter User ID:</label>
+            <input type="number" id="searchUserId" name="searchUserId" required>
+            <input type="submit" value="Search User">
+        </form>
+        <div id="updateUserFormContainer" class="hidden">
+            <form id="updateUserForm">
+                <input type="hidden" id="updateUserId" name="c_id">
+                <label for="update_c_name">Name:</label>
+                <input type="text" id="update_c_name" name="c_name" required>
+                <br>
+                <label for="update_c_vill">Village:</label>
+                <input type="text" id="update_c_vill" name="c_vill" required>
+                <br>
+                <label for="update_c_category">Category:</label>
+                <input type="text" id="update_c_category" name="c_category" required>
+                <br>
+                <label for="update_phone">Phone:</label>
+                <input type="text" id="update_phone" name="phone" required>
+                <br>
+                <input type="submit" value="Update User">
+            </form>
+        </div>
+    </div>
+    
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // JavaScript code to handle form submissions
+
+            // Helper function to create a table
+            function createTable(data, columns) {
+                let table = '<table><thead><tr>';
+                columns.forEach(col => table += `<th>${col}</th>`);
+                table += '</tr></thead><tbody>';
+                data.forEach(row => {
+                    table += '<tr>';
+                    columns.forEach(col => table += `<td>${row[col]}</td>`);
+                    table += '</tr>';
+                });
+                table += '</tbody></table>';
+                return table;
+            }
+
+            // Handle add user form submission
+            document.getElementById('addUserForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                fetch('/add_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    const addUserResult = document.getElementById('addUserResult');
+                    addUserResult.classList.remove('hidden');
+                    addUserResult.innerHTML = `User added successfully: ${JSON.stringify(result.data)}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle add payment form submission
+            document.getElementById('addPaymentForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                fetch('/add_payments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    const addPaymentResult = document.getElementById('addPaymentResult');
+                    addPaymentResult.classList.remove('hidden');
+                    addPaymentResult.innerHTML = `Payment added successfully: ${JSON.stringify(result.data)}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle find user form submission
+            document.getElementById('findUserForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const userId = document.getElementById('userId').value;
+
+                fetch(`/find_user?userId=${userId}`)
+                .then(response => response.json())
+                .then(result => {
+                    const userResult = document.getElementById('userResult');
+                    userResult.classList.remove('hidden');
+                    if (result.length > 0) {
+                        userResult.innerHTML = createTable(result, ['c_id', 'c_name', 'c_vill', 'c_category', 'phone']);
+                    } else {
+                        userResult.innerHTML = 'No user found';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle find payments form submission
+            document.getElementById('findPaymentsForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const userIdPayments = document.getElementById('userIdPayments').value;
+
+                fetch(`/find_payments?userIdPayments=${userIdPayments}`)
+                .then(response => response.json())
+                .then(result => {
+                    const paymentsResult = document.getElementById('paymentsResult');
+                    paymentsResult.classList.remove('hidden');
+                    if (result.length > 0) {
+                        paymentsResult.innerHTML = createTable(result, ['p_id', 'c_id', 'c_name', 'p_month']);
+                    } else {
+                        paymentsResult.innerHTML = 'No payments found';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle view payments by month form submission
+            document.getElementById('viewPaymentsByMonthForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const p_month = document.getElementById('p_month').value;
+
+                fetch(`/view_payments_by_month?p_month=${p_month}`)
+                .then(response => response.json())
+                .then(result => {
+                    const paymentsByMonthResult = document.getElementById('paymentsByMonthResult');
+                    paymentsByMonthResult.classList.remove('hidden');
+                    if (result.length > 0) {
+                        paymentsByMonthResult.innerHTML = createTable(result, ['p_id', 'c_id', 'c_name', 'p_month']);
+                    } else {
+                        paymentsByMonthResult.innerHTML = 'No payments found for the specified month';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle total amount paid form submission
+            document.getElementById('totalAmountPaidForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const userIdTotal = document.getElementById('userIdTotal').value;
+
+                fetch(`/total_amount_paid?userId=${userIdTotal}`)
+                .then(response => response.json())
+                .then(result => {
+                    const totalAmountResult = document.getElementById('totalAmountResult');
+                    totalAmountResult.classList.remove('hidden');
+                    totalAmountResult.innerHTML = `Total Amount Paid: ${result.total_amount}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle delete user form submission
+            document.getElementById('deleteUserForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const userId = document.getElementById('userIdDelete').value;
+
+                fetch(`/delete_user?userId=${userId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    const deleteResult = document.getElementById('deleteResult');
+                    const deletedUserDetails = document.getElementById('deletedUserDetails');
+                    const paymentCount = document.getElementById('paymentCount');
+                    
+                    deleteResult.classList.remove('hidden');
+                    if (result.userDetails) {
+                        deletedUserDetails.innerHTML = `User Details: ${JSON.stringify(result.userDetails)}`;
+                    } else {
+                        deletedUserDetails.innerHTML = 'User not found';
+                    }
+                    paymentCount.innerHTML = `Total Payments Made: ${result.paymentCount}`;
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle load users button click
+            document.getElementById('loadUsers').addEventListener('click', function () {
+                fetch('/find_all_users')
+                .then(response => response.json())
+                .then(result => {
+                    const usersList = document.getElementById('usersList');
+                    usersList.classList.remove('hidden');
+                    if (result.length > 0) {
+                        usersList.innerHTML = createTable(result, ['c_id', 'c_name', 'c_vill', 'c_category', 'phone']);
+                    } else {
+                        usersList.innerHTML = 'No users found';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle search user form submission
+            document.getElementById('searchUserForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const searchUserId = document.getElementById('searchUserId').value;
+
+                fetch(`/find_user?userId=${searchUserId}`)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.length > 0) {
+                        const user = result[0];
+                        document.getElementById('updateUserId').value = user.c_id;
+                        document.getElementById('update_c_name').value = user.c_name;
+                        document.getElementById('update_c_vill').value = user.c_vill;
+                        document.getElementById('update_c_category').value = user.c_category;
+                        document.getElementById('update_phone').value = user.phone;
+
+                        document.getElementById('updateUserFormContainer').classList.remove('hidden');
+                    } else {
+                        alert('User not found');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+
+            // Handle update user form submission
+            document.getElementById('updateUserForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                fetch('/update_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    alert('User updated successfully');
+                    document.getElementById('updateUserFormContainer').classList.add('hidden');
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</body>
+</html>
